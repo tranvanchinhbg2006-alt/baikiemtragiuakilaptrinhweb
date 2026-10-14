@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(#{dishes.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header('dishes')}"></header>
+<main class="container page-main narrow-content">
+    <a class="back-link" th:href="@{/dishes}">← <span th:text="#{common.back}"></span></a>
+    <section class="page-heading form-heading"><div><div class="eyebrow">MENU / BIT242181</div><h1 th:text="${editing} ? #{dishes.edit.title} : #{dishes.new.title}"></h1><p th:text="#{dishes.form.subtitle}"></p></div></section>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <form class="panel edit-form" th:object="${form}" th:action="${editing} ? @{/dishes/{id}(id=${dishId})} : @{/dishes}" method="post" novalidate>
+        <div class="form-section-title"><span class="section-count">01</span> <h2 th:text="#{dishes.detail}">Details</h2></div>
+        <div class="form-grid">
+            <div class="field field-full"><label for="name" th:text="#{common.name} + ' *'"></label><input id="name" th:field="*{name}" maxlength="160" th:errorclass="invalid" required><small class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small></div>
+            <div class="field"><label for="price" th:text="#{dishes.price} + ' (VND) *'"></label><input id="price" type="number" min="0.01" step="0.01" th:field="*{price}" th:errorclass="invalid" required><small class="field-error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></small></div>
+            <div class="field"><label for="preparationTime" th:text="#{dishes.preparation} + ' (' + #{common.minutes} + ') *'"></label><input id="preparationTime" type="number" min="1" step="1" th:field="*{preparationTime}" th:errorclass="invalid" required><small class="field-error" th:if="${#fields.hasErrors('preparationTime')}" th:errors="*{preparationTime}"></small></div>
+            <div class="field field-full"><label for="dishCategoryId" th:text="#{dishes.category} + ' *'"></label><select id="dishCategoryId" th:field="*{dishCategoryId}" th:errorclass="invalid" required><option value="" th:text="#{dishes.category.choose}"></option><option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option></select><small class="field-error" th:if="${#fields.hasErrors('dishCategoryId')}" th:errors="*{dishCategoryId}"></small></div>
+            <div class="field field-full"><label for="description" th:text="#{common.description}"></label><textarea id="description" th:field="*{description}" rows="4" maxlength="2000" th:errorclass="invalid"></textarea><small class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small></div>
+            <div class="field field-full"><label class="toggle-line"><input type="checkbox" th:field="*{available}"><span class="toggle"></span><span th:text="#{dishes.form.available}">Available</span></label></div>
+        </div>
+        <div class="form-actions"><a class="btn btn-light" th:href="@{/dishes}" th:text="#{common.cancel}"></a><button type="submit" class="btn btn-primary" th:text="#{common.save}">Save</button></div>
+    </form>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

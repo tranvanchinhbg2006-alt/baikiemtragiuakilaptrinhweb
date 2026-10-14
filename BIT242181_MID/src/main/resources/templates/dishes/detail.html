@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(#{dishes.detail})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header('dishes')}"></header>
+<main class="container page-main">
+    <a class="back-link" th:href="@{/dishes}">← <span th:text="#{common.back}"></span></a>
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="detail-grid">
+        <div class="panel hero-media"><img th:if="${@dishView.thumbnail(dish) != null}" th:src="${@dishView.thumbnail(dish)}" alt="Cover image"><div th:if="${@dishView.thumbnail(dish) == null}" class="hero-placeholder"><span>◻</span><p th:text="#{common.noimage}"></p></div><span class="image-count" th:text="${#lists.size(dish.images)} + ' ' + #{images.count}"></span></div>
+        <div class="detail-content">
+            <div class="eyebrow">BIT242181 / DISH #<span th:text="${dish.id}"></span></div>
+            <h1 th:text="${dish.name}">Dish name</h1>
+            <div class="detail-labels"><span class="category-tag" th:text="${dish.category.name}"></span><span class="status" th:classappend="${dish.available} ? 'available' : 'unavailable'"><i></i><span th:text="${dish.available} ? #{status.available} : #{status.unavailable}"></span></span></div>
+            <p class="detail-desc" th:text="${#strings.isEmpty(dish.description)} ? #{common.description} : ${dish.description}"></p>
+            <div class="stats-grid"><div><small th:text="#{dishes.price}"></small><strong th:text="${#numbers.formatDecimal(dish.price, 1, 'COMMA', 0, 'POINT')} + ' ₫'"></strong></div><div><small th:text="#{dishes.preparation}"></small><strong th:text="${dish.preparationTime} + ' ' + #{common.minutes}"></strong></div><div><small th:text="#{dishes.classification}"></small><strong th:text="${@dishView.isQuick(dish)} ? #{dishes.quick.detail} : #{dishes.regular.detail}"></strong></div></div>
+            <div class="detail-controls"><a class="btn btn-primary" th:href="@{/dishes/{id}/edit(id=${dish.id})}" th:text="#{common.edit}">Edit</a><form th:action="@{/dishes/{id}/delete(id=${dish.id})}" method="post" th:attr="data-confirm=#{common.confirm.delete}"><button type="submit" class="btn btn-danger-outline" th:text="#{dishes.delete}">Delete</button></form></div>
+        </div>
+    </section>
+    <section class="gallery-section"><div class="section-heading"><div><div class="eyebrow">MEDIA / <span th:text="#{nav.gallery}">Gallery</span></div><h2 th:text="#{images.title}">Gallery</h2><p th:text="#{images.subtitle}"></p></div></div>
+        <div th:if="${#lists.isEmpty(dish.images)}" class="panel empty-gallery" th:text="#{images.none}"></div>
+        <div class="image-grid" th:unless="${#lists.isEmpty(dish.images)}">
+            <div class="panel image-card" th:each="image : ${dish.images}">
+                <div class="gallery-photo"><img th:src="${image.imageUrl}" alt="Dish photo" loading="lazy"><span th:if="${image.thumbnail}" class="cover-badge" th:text="#{images.cover}"></span></div>
+                <div class="image-card-actions"><span class="image-id" th:text="'#' + ${image.id}"></span><div><form th:unless="${image.thumbnail}" th:action="@{/dishes/{dishId}/images/{imageId}/thumbnail(dishId=${dish.id},imageId=${image.id})}" method="post"><button type="submit" class="text-button" th:text="#{images.make.thumbnail}"></button></form><form th:action="@{/dishes/{dishId}/images/{imageId}/delete(dishId=${dish.id},imageId=${image.id})}" method="post" th:attr="data-confirm=#{common.confirm.delete}"><button type="submit" class="text-button danger" th:text="#{images.remove}"></button></form></div></div>
+            </div>
+        </div>
+        <form class="panel add-image-panel" th:action="@{/dishes/{id}/images(id=${dish.id})}" method="post">
+            <h3 th:text="#{images.add}">Add image</h3><div class="add-image-row"><label class="field" for="imageUrl"><span th:text="#{images.url}"></span><input id="imageUrl" type="url" name="imageUrl" th:placeholder="#{images.url.placeholder}" maxlength="2048" required></label><label class="check-line"><input type="checkbox" name="thumbnail" value="true"><span th:text="#{images.thumbnail}"></span></label><button type="submit" class="btn btn-primary" th:text="#{images.add}">Add image</button></div><p class="form-hint" th:text="#{images.tip}"></p>
+        </form>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script th:src="@{/js/app.js}"></script>
+</body></html>

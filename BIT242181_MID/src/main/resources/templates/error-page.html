@@ -1,0 +1,6 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(${errorTitle})}"></head><body>
+<header th:replace="~{fragments/layout :: header('dishes')}"></header>
+<main class="container page-main"><div class="panel error-page"><span class="error-symbol">!</span><div class="eyebrow">BIT242181 / ERROR</div><h1 th:text="${errorTitle}">Error</h1><p th:text="${errorMessage}">Description</p><a class="btn btn-primary" th:href="@{/dishes}" th:text="#{common.home}"></a></div></main><footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

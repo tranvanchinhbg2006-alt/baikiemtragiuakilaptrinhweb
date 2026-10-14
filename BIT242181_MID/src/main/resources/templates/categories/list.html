@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(#{categories.title})}"></head><body>
+<header th:replace="~{fragments/layout :: header('categories')}"></header>
+<main class="container page-main">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="page-heading"><div><div class="eyebrow"><span th:text="#{nav.menu}"></span> / <span th:text="#{nav.management}"></span></div><h1 th:text="#{categories.title}"></h1><p th:text="#{categories.subtitle}"></p></div><a class="btn btn-primary" th:href="@{/categories/new}"><span class="btn-plus">+</span><span th:text="#{categories.add}"></span></a></section>
+    <section class="panel list-panel"><div class="table-toolbar"><h2 th:text="#{nav.categories}"></h2><span class="table-note">BIT242181</span></div>
+        <div class="table-scroll"><table class="data-table"><thead><tr><th th:text="#{common.name}"></th><th th:text="#{common.description}"></th><th th:text="#{categories.dishes}"></th><th class="text-right" th:text="#{common.actions}"></th></tr></thead><tbody><tr th:each="category : ${categories}"><td><span class="dish-name" th:text="${category.name}"></span><small class="row-id" th:text="'#' + ${category.id}"></small></td><td class="muted-cell" th:text="${category.description}"></td><td><span class="count-chip" th:text="${counts[category.id]}">0</span></td><td><div class="table-actions"><a class="action-link" th:href="@{/categories/{id}/edit(id=${category.id})}" th:text="#{common.edit}"></a><form th:action="@{/categories/{id}/delete(id=${category.id})}" method="post" th:attr="data-confirm=#{common.confirm.delete}"><button class="text-button danger" type="submit" th:text="#{common.delete}"></button></form></div></td></tr></tbody></table></div>
+        <div th:if="${#lists.isEmpty(categories)}" class="empty-state" th:text="#{categories.empty}"></div>
+    </section>
+</main><footer th:replace="~{fragments/layout :: footer}"></footer><script th:src="@{/js/app.js}"></script>
+</body></html>

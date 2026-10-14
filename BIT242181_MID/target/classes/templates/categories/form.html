@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(#{categories.title})}"></head><body>
+<header th:replace="~{fragments/layout :: header('categories')}"></header>
+<main class="container page-main narrow-content"><a class="back-link" th:href="@{/categories}">← <span th:text="#{common.back}"></span></a><section class="page-heading"><div><div class="eyebrow">CATEGORIES / BIT242181</div><h1 th:text="${editing} ? #{categories.edit.title} : #{categories.new.title}"></h1><p th:text="#{dishes.form.subtitle}"></p></div></section>
+<form class="panel edit-form" th:object="${form}" th:action="${editing} ? @{/categories/{id}(id=${categoryId})} : @{/categories}" method="post" novalidate>
+    <div class="form-section-title"><span class="section-count">01</span><h2 th:text="#{nav.categories}"></h2></div>
+    <div class="form-grid"><div class="field field-full"><label for="name" th:text="#{common.name} + ' *'"></label><input id="name" th:field="*{name}" th:placeholder="#{categories.name.placeholder}" maxlength="120" th:errorclass="invalid" required><small class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></small></div><div class="field field-full"><label for="description" th:text="#{common.description}"></label><textarea id="description" th:field="*{description}" th:placeholder="#{categories.description.placeholder}" rows="5" maxlength="1000" th:errorclass="invalid"></textarea><small class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></small></div></div>
+    <div class="form-actions"><a class="btn btn-light" th:href="@{/categories}" th:text="#{common.cancel}"></a><button class="btn btn-primary" type="submit" th:text="#{common.save}"></button></div>
+</form></main><footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

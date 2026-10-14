@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${lang}">
+<head th:replace="~{fragments/layout :: head(#{dishes.title})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header('dishes')}"></header>
+<main class="container page-main">
+    <div th:replace="~{fragments/layout :: alerts}"></div>
+    <section class="page-heading">
+        <div><div class="eyebrow"><span th:text="#{nav.menu}"></span> / <span th:text="#{nav.management}">MANAGEMENT</span></div><h1 th:text="#{dishes.title}">Dish management</h1><p th:text="#{dishes.subtitle}"></p></div>
+        <a class="btn btn-primary" th:href="@{/dishes/new}"><span class="btn-plus">+</span><span th:text="#{dishes.add}">Add a dish</span></a>
+    </section>
+    <section class="panel filter-panel">
+        <div class="filter-heading"><div><h2 th:text="#{dishes.filters}">Search & filters</h2><p th:text="#{dishes.total} + ': ' + ${#lists.size(dishes)}">Shown 0</p></div><span class="filter-icon">⌕</span></div>
+        <div th:if="${filterError}" class="inline-error" th:text="${filterError}"></div>
+        <form th:action="@{/dishes}" th:object="${filter}" method="get" class="filter-grid">
+            <label class="field field-keyword"><span th:text="#{dishes.keyword}">Dish name</span><input type="text" th:field="*{keyword}" th:placeholder="#{dishes.keyword.placeholder}" autocomplete="off"></label>
+            <label class="field"><span th:text="#{dishes.category}">Category</span><select th:field="*{categoryId}"><option value="" th:text="#{dishes.category.all}">All</option><option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option></select></label>
+            <label class="field"><span th:text="#{dishes.availability}">Availability</span><select th:field="*{availability}"><option value="all" th:text="#{dishes.availability.all}"></option><option value="true" th:text="#{status.available}"></option><option value="false" th:text="#{status.unavailable}"></option></select></label>
+            <label class="field"><span th:text="#{dishes.price.min}">Min price</span><input type="number" th:field="*{minPrice}" min="0" step="1000" placeholder="0"></label>
+            <label class="field"><span th:text="#{dishes.price.max}">Max price</span><input type="number" th:field="*{maxPrice}" min="0" step="1000" placeholder="100000"></label>
+            <label class="field"><span th:text="#{dishes.sort}">Sort</span><select th:field="*{sort}"><option value="name" th:text="#{dishes.sort.name}"></option><option value="priceAsc" th:text="#{dishes.sort.priceasc}"></option><option value="priceDesc" th:text="#{dishes.sort.pricedesc}"></option><option value="timeAsc" th:text="#{dishes.sort.timeasc}"></option></select></label>
+            <div class="filter-actions"><a class="btn btn-light" th:href="@{/dishes}" th:text="#{common.reset}">Reset</a><button class="btn btn-primary" type="submit" th:text="#{dishes.apply}">Apply filters</button></div>
+        </form>
+    </section>
+    <section class="panel list-panel">
+        <div class="table-toolbar"><div><h2 th:text="#{nav.dishes}">Dishes</h2><p><span th:text="${#lists.size(dishes)}">0</span> <span th:text="#{dishes.total}">Dishes shown</span></p></div><span class="table-note">BIT242181</span></div>
+        <div class="table-scroll"><table class="data-table"><thead><tr><th th:text="#{dishes.title}">Dish</th><th th:text="#{dishes.category}">Category</th><th th:text="#{dishes.price}">Price</th><th th:text="#{dishes.preparation}">Time</th><th th:text="#{dishes.availability}">Status</th><th class="text-right" th:text="#{common.actions}">Actions</th></tr></thead>
+            <tbody>
+            <tr th:each="dish : ${dishes}">
+                <td><div class="dish-cell"><a class="mini-image" th:href="@{/dishes/{id}(id=${dish.id})}"><img th:if="${@dishView.thumbnail(dish) != null}" th:src="${@dishView.thumbnail(dish)}" alt=""><span th:if="${@dishView.thumbnail(dish) == null}">◻</span></a><div><a class="dish-name" th:href="@{/dishes/{id}(id=${dish.id})}" th:text="${dish.name}">Name</a><small th:text="'ID #' + ${dish.id}">ID</small></div></div></td>
+                <td><span class="category-tag" th:text="${dish.category.name}">Category</span></td>
+                <td class="price" th:text="${#numbers.formatDecimal(dish.price, 1, 'COMMA', 0, 'POINT')} + ' ₫'">55,000 ₫</td>
+                <td><div class="time-cell"><span th:text="${dish.preparationTime} + ' ' + #{common.minutes}"></span><span class="speed-tag" th:classappend="${@dishView.isQuick(dish)} ? 'fast' : 'regular'" th:text="${@dishView.isQuick(dish)} ? #{dishes.quick} : #{dishes.regular}"></span></div></td>
+                <td><span class="status" th:classappend="${dish.available} ? 'available' : 'unavailable'"><i></i><span th:text="${dish.available} ? #{status.available} : #{status.unavailable}"></span></span></td>
+                <td><div class="table-actions"><a th:href="@{/dishes/{id}(id=${dish.id})}" class="action-link" th:text="#{common.details}">Detail</a><a th:href="@{/dishes/{id}/edit(id=${dish.id})}" class="action-link" th:text="#{common.edit}">Edit</a></div></td>
+            </tr></tbody></table></div>
+        <div th:if="${#lists.isEmpty(dishes)}" class="empty-state"><span class="empty-art">⌁</span><h3 th:text="#{dishes.empty}"></h3><p th:text="#{dishes.empty.detail}"></p></div>
+    </section>
+</main>
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body></html>

@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f7f4">
+
+    <title th:text="${pageTitle} + ' · BIT242181'">
+        BIT242181
+    </title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header th:fragment="header(activeTab)" class="site-header">
+    <div class="container nav-shell">
+
+        <!-- LOGO DA SUA LOI -->
+        <a class="brand"
+           th:href="@{/dishes}"
+           th:attr="aria-label=#{common.home}">
+
+            <span class="brand-symbol">
+                <span>K<span class="brand-dot">.</span></span>
+            </span>
+
+            <span class="brand-label">
+                <strong th:text="#{app.name}">
+                    Kitchen Studio
+                </strong>
+                <small th:text="#{app.subtitle}">
+                    BIT242181
+                </small>
+            </span>
+        </a>
+
+        <!-- MENU -->
+        <nav class="main-nav" aria-label="Primary">
+
+            <a th:href="@{/dishes}"
+               th:classappend="${activeTab == 'dishes'} ? 'active' : ''"
+               th:text="#{nav.dishes}">
+                Dishes
+            </a>
+
+            <a th:href="@{/categories}"
+               th:classappend="${activeTab == 'categories'} ? 'active' : ''"
+               th:text="#{nav.categories}">
+                Categories
+            </a>
+
+        </nav>
+
+        <!-- RIGHT NAVIGATION -->
+        <div class="nav-right">
+
+            <span class="student-chip">
+                <span class="chip-dot"></span>
+                BIT242181
+            </span>
+
+            <!-- LANGUAGE SWITCH -->
+            <div class="language-switch"
+                 th:attr="aria-label=#{language}">
+
+                <a th:href="@{/language(lang='en',returnTo=${returnTo})}"
+                   th:classappend="${lang == 'en'} ? 'selected' : ''">
+                    EN
+                </a>
+
+                <a th:href="@{/language(lang='vi',returnTo=${returnTo})}"
+                   th:classappend="${lang == 'vi'} ? 'selected' : ''">
+                    VI
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<!-- ALERT MESSAGES -->
+<div th:fragment="alerts" class="alert-wrap">
+
+    <div th:if="${success}" class="alert alert-success">
+        <span>✓</span>
+        <span th:text="${success}"></span>
+    </div>
+
+    <div th:if="${error}" class="alert alert-error">
+        <span>!</span>
+        <span th:text="${error}"></span>
+    </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer th:fragment="footer" class="site-footer">
+
+    <div class="container footer-inner">
+
+        <span>
+            © 2026
+            <strong>BIT242181</strong>
+            · Spring Boot + PostgreSQL
+        </span>
+
+        <span th:text="#{nav.management}">
+            Management
+        </span>
+
+    </div>
+
+</footer>
+
+</body>
+</html>
